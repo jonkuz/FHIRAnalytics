@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from Entities.Encounter import Encounter
+import requests
 
 app = FastAPI()
 
@@ -14,7 +15,7 @@ async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
 
-@app.put("/api/data/encounter/Encounter/{encounter_id}")
+@app.put("/api/data/encounter/Encounter/{encounter_id}", status_code=200)
 async def handle_encounter(encounter_id: str, request: Request):
     try:
         payload = await request.json()
@@ -22,14 +23,27 @@ async def handle_encounter(encounter_id: str, request: Request):
         if 'resourceType' not in payload:
             raise HTTPException(status_code=400, detail="Missing 'resourceType' in JSON payload")
 
-        # Optional: Validierung und Verarbeitung des Encounters hier
+        # Verarbeiten der Daten
+
+        # Abfragen des referenzierten Patienten
         print(f"Received encounter {encounter_id}: {payload}")
 
-        # Beispielhafte Rückgabe eines Encounter-Objekts im FHIR-Format
+        patient_id = payload['subject']['reference'].split('/')[1]
+        res = requests.get("http://localhost:8080/fhir/Patient", params={"_id": patient_id})
+        print(res.json())
+        # Zurückgeben der Daten damit der FHIR Server erkennt, dass die Anfrage erfolgreich war.
         response_payload = {
-            "resourceType": "Encounter",
+            "resourceType": payload["resourceType"],
             "id": encounter_id,
-            "status": "completed"  # Beispielstatus, passe dies nach Bedarf an
+            "meta": {
+                "versionId": payload['meta']['versionId'],
+                "lastUpdated": payload['meta']['lastUpdated'],
+                "source": payload['meta']['source']
+            },
+            "status": payload['status'],
+            "subject": {
+                "reference": payload['subject']['reference']
+            }
         }
 
         return response_payload
