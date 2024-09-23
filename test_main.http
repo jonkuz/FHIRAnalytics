@@ -10,7 +10,7 @@ Accept: application/json
 
 ###
 
-POST http://127.0.0.1:8000/api/data/encounter{
+PUT http://127.0.0.1:8000/api/data/Encounter/12321
 Accept: application/json
 
 ###
