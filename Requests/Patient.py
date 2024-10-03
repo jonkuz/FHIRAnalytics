@@ -7,12 +7,7 @@ def get_patient(patient_id: int) -> list:
     res = requests.get("http://localhost:8080/fhir/Patient", params={"_id": patient_id})
     patient_response = res.json()
 
-    # Anhängen des Patienten in die row
     patient_id = patient_response['entry'][0]['resource']['id']
-    patient_version_id = patient_response['entry'][0]['resource']['meta']['versionId']
-    patient_last_updated = datetime.fromisoformat(patient_response['entry'][0]['resource']['meta']['lastUpdated']
-                                                  .replace("Z", "+00:00"))
-    patient_source = patient_response['entry'][0]['resource']['meta']['source']
     identifier_use = ""
     identifier_system = ""
     identifier_value = ""
