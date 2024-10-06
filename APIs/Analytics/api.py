@@ -57,6 +57,7 @@ async def encounter_timespan(start: str, end: str):
             SELECT encounter_id
             FROM FHIROptimization.Encounter
             WHERE period_start > toString(%(start)s) AND period_end < toString(%(end)s)
+            AND patient_active = true
         """
 
         result = client.query(query, parameters={"start": start, "end": end})
