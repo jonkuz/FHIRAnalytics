@@ -18,12 +18,10 @@ router = APIRouter()
 async def handle_encounter(encounter_id: str, request: Request):
     try:
         payload = await request.json()
-        # Überprüfe, ob das payload die benötigten Felder enthält
         if 'resourceType' not in payload:
             raise HTTPException(status_code=400, detail="Missing 'resourceType' in JSON payload")
         print(f"Received encounter {encounter_id}: {payload}")
 
-        # Verarbeiten der Daten
         identifier_system = []
         identifier_code = []
         identifier_value = []
@@ -55,19 +53,19 @@ async def handle_encounter(encounter_id: str, request: Request):
         patient = get_patient(patient_id)
         row += patient
 
-        # Abfragen der referenzierten Episode of care
+        # Abfragen der referenzierten EpisodeOfCare
         episode_of_care_id = payload['episodeOfCare'][0]['reference'].split('/')[1]
         episode_of_care = get_episode_of_care(episode_of_care_id)
         row += episode_of_care
 
-        # Abfragen der referenzierten Organisation
+        # Abfragen der referenzierten Organization
         organization_id = payload['serviceProvider']['reference'].split('/')[1]
         organization = get_organization(organization_id)
         row += organization
 
         data = [row]
         client = clickhouse_client()
-        client.insert("FHIROptimization.EncounterNew", data,
+        client.insert("FHIROptimization.Encounter", data,
                       column_names=[
                           'encounter_id',
                           'identifier.system',

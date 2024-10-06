@@ -63,7 +63,7 @@ async def handle_medication_statement(medication_statement_id: str, request: Req
 
         data = [row]
         client = clickhouse_client()
-        client.insert("FHIROptimization.MedicationStatementNew", data,
+        client.insert("FHIROptimization.MedicationStatement", data,
                       column_names=[
                           'medication_statement_id',
                           'status',
@@ -115,7 +115,6 @@ async def handle_medication_statement(medication_statement_id: str, request: Req
                           'encounter_period_end',
                       ])
 
-        # Zurückgeben der Daten damit der FHIR Server erkennt, dass die Anfrage erfolgreich war.
         return payload
 
     except Exception as e:

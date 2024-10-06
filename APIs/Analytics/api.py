@@ -10,12 +10,9 @@ async def medication_patient(medication_id: int):
         client = clickhouse_client()
 
         query = """
-            SELECT patient.id 
-            FROM FHIROptimization.MedicationStatement 
-            WHERE arrayExists(
-                innerArray -> arrayExists(medication_id -> medication_id = toString(%(medication_id)s), innerArray),
-                medication.code_code
-            )
+            SELECT subject 
+            FROM FHIROptimization.MedicationStatement
+            WHERE arrayExists(code -> code = toString(%(medication_id)s), medication_code.code)
         """
 
         result = client.query(query, parameters={"medication_id": medication_id})
@@ -34,10 +31,10 @@ async def patient_organization_contact(patient_id: int, organization_id: int):
         client = clickhouse_client()
 
         query = """
-            SELECT patient.id, encounter_id
+            SELECT patient_id, encounter_id
             FROM FHIROptimization.Encounter
-            WHERE arrayExists(patient -> patient = toString(%(patient_id)s), patient.id)
-            AND arrayExists(service_provider -> service_provider = toString(%(organization_id)s), service_provider.id)
+            WHERE patient_id = toString(%(patient_id)s)
+            AND service_provider_id = toString(%(organization_id)s)
         """
 
         result = client.query(query, parameters={"patient_id": patient_id, "organization_id": organization_id})
@@ -73,24 +70,23 @@ async def encounter_timespan(start: str, end: str):
 
 # Abfrage 4
 @router.get("/analytics/MedicationManufacturer", status_code=200)
-async def medication_manufacturer(medication_id: int, manufacturer_id: int):
+async def medication_manufacturer(medication_code: int, manufacturer_id: int):
     try:
         client = clickhouse_client()
 
         query = """
             SELECT medication_statement_id
             FROM FHIROptimization.MedicationStatement
-            WHERE arrayExists(innerArray -> 
-                arrayExists(medication_id -> medication_id = toString(%(medication_id)s), innerArray), medication.code_code)
+            WHERE arrayExists(code -> code = toString(%(medication_code)s), medication_code.code)
                 AND
-                arrayExists(manufacturer -> manufacturer = toString(%(manufacturer_id)s), `medication.manufacturer_id`)     
+                medication_manufacturer_id = toString(%(manufacturer_id)s)     
         """
 
-        result = client.query(query, parameters={"medication_id": medication_id, "manufacturer_id": manufacturer_id})
+        result = client.query(query, parameters={"medication_code": medication_code, "manufacturer_id": manufacturer_id})
 
         medication_statement_ids = [row[0] for row in result.result_rows]
 
-        return {"medication_id": medication_id, "medication_statements": medication_statement_ids}
+        return {"medication_code": medication_code, "medication_statements": medication_statement_ids}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing analytics request: {str(e)}")
 
