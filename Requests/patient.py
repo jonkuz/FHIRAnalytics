@@ -2,6 +2,8 @@ from datetime import datetime
 
 import requests
 
+from util import extract_address
+
 
 def get_patient(patient_id: int) -> list:
     res = requests.get("http://localhost:8080/fhir/Patient", params={"_id": patient_id})
@@ -35,18 +37,7 @@ def get_patient(patient_id: int) -> list:
         patient_birth_date = datetime.fromisoformat(patient_response['entry'][0]['resource']['birthDate']
                                                     .replace("Z", "+00:00"))
 
-    address_type = []
-    address_line = []
-    address_city = []
-    address_postal_code = []
-    address_country = []
-    for address in response['address']:
-        address_type.append(address.get('type', ""))
-        for line in address['line']:
-            address_line.append(line)
-        address_city.append(address.get('city', ""))
-        address_postal_code.append(address.get('postalCode', ""))
-        address_country.append(address.get('country', ""))
+    address_type, address_line, address_city, address_postal_code, address_country = extract_address(response)
 
     marital_status_system = ""
     marital_status_code = ""
@@ -74,3 +65,5 @@ def get_patient(patient_id: int) -> list:
         marital_status_system,
         marital_status_code
     ]
+
+

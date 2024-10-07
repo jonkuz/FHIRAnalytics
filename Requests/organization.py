@@ -1,5 +1,7 @@
 import requests
 
+from util import extract_address
+
 
 def get_organization(organization_id: int) -> list:
     res = requests.get("http://localhost:8080/fhir/Organization", params={"_id": organization_id})
@@ -23,18 +25,7 @@ def get_organization(organization_id: int) -> list:
     name = response.get('name', "")
     active = response.get('active', False)
 
-    address_type = []
-    address_line = []
-    address_city = []
-    address_postal_code = []
-    address_country = []
-    for address in response['address']:
-        address_type.append(address.get('type', ""))
-        for line in address['line']:
-            address_line.append(line)
-        address_city.append(address.get('city', ""))
-        address_postal_code.append(address.get('postalCode', ""))
-        address_country.append(address.get('country', ""))
+    address_type, address_line, address_city, address_postal_code, address_country = extract_address(response)
 
     return [
         organization_id,

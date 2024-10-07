@@ -33,4 +33,3 @@ def get_episode_of_care(episode_of_care_id: int) -> list:
         period_start,
         period_end
     ]
-
