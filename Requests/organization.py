@@ -1,5 +1,4 @@
 import requests
-
 from util import extract_address
 
 
@@ -41,4 +40,3 @@ def get_organization(organization_id: int) -> list:
         address_postal_code,
         address_country
     ]
-

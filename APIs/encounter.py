@@ -1,14 +1,9 @@
 from fastapi import APIRouter
 from datetime import datetime
-
 from fastapi import FastAPI, HTTPException, Request
-
 from Clickhouse.clickhouse_client import clickhouse_client
-
 from Requests.episode_of_care import get_episode_of_care
-from Requests.medication import get_medication
 from Requests.organization import get_organization
-
 from Requests.patient import get_patient
 
 router = APIRouter()

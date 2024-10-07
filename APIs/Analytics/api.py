@@ -90,5 +90,3 @@ async def medication_manufacturer(medication_code: int, manufacturer_id: int):
         return {"medication_code": medication_code, "medication_statements": medication_statement_ids}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing analytics request: {str(e)}")
-
-

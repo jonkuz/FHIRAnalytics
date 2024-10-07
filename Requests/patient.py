@@ -1,7 +1,5 @@
 from datetime import datetime
-
 import requests
-
 from util import extract_address
 
 
@@ -65,5 +63,3 @@ def get_patient(patient_id: int) -> list:
         marital_status_system,
         marital_status_code
     ]
-
-

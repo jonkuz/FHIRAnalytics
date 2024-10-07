@@ -34,5 +34,3 @@ def get_encounter(encounter_id: int) -> list:
         period_start,
         period_end
     ]
-
-

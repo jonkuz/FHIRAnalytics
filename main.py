@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-
 from APIs.Analytics.api import router as analytics_api_router
 from APIs.medication_statement import router as medication_statement_router
 from FHIRRequests.proxy import router as FHIR_requests_router

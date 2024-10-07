@@ -36,8 +36,3 @@ for resource in FHIR_RESOURCES:
     @router.api_route(f"/fhir/{resource}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
     async def proxy_resource(request: Request, resource_type=resource):
         return await forward_request(resource_type, request)
-
-
-
-
-
