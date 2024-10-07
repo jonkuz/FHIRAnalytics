@@ -56,7 +56,7 @@ Die Logs werden auf der Konsole ausgegeben.
 - FHIRAnalytics API starten ([main.py](main.py))
 - Clickhouse Server starten (Docker oder CLI)
 - HAPI FHIR Server starten (Docker oder CLI)
-- 
+
 ### Testen der Funktionalitäten
 Mit dem Testdaten-Generator oder manuell eine Resource vom Typ MedicationStatement oder Encounter erzeugen. Diese kann direkt an die FHIRAnalytics API gesendet werden. Es sind keine direkten Anfragen an den FHIR Server mehr notwendig.
 - Überprüfen der Logs in der API
