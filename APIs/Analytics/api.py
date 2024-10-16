@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import APIRouter, HTTPException
 from Clickhouse.clickhouse_client import clickhouse_client
 router = APIRouter()
@@ -5,39 +7,38 @@ router = APIRouter()
 
 # Abfrage 1
 @router.get("/analytics/MedicationPatient", status_code=200)
-async def medication_patient(medication_id: int):
+async def medication_patient(medication_code: int):
     try:
         client = clickhouse_client()
 
         query = """
             SELECT subject 
             FROM FHIROptimization.MedicationStatement
-            WHERE arrayExists(code -> code = toString(%(medication_id)s), medication_code.code)
+            WHERE arrayExists(code -> code = toString(%(medication_code)s), medication_code.code)
         """
 
-        result = client.query(query, parameters={"medication_id": medication_id})
+        result = client.query(query, parameters={"medication_code": medication_code})
 
         patient_ids = [row[0] for row in result.result_rows]
 
-        return {"medication_id": medication_id, "patient_ids": patient_ids}
+        return {"medication_id": medication_code, "patient_ids": patient_ids}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing analytics request: {str(e)}")
 
 
 # Abfrage 2
-@router.get("/analytics/PatientOrganizationContact", status_code=200)
-async def patient_organization_contact(patient_id: int, organization_id: int):
+@router.get("/analytics/OrganizationContact", status_code=200)
+async def patient_organization_contact(organization_id: int):
     try:
         client = clickhouse_client()
 
         query = """
             SELECT patient_id, encounter_id
             FROM FHIROptimization.Encounter
-            WHERE patient_id = toString(%(patient_id)s)
-            AND service_provider_id = toString(%(organization_id)s)
+            WHERE service_provider_id = toString(%(organization_id)s)
         """
 
-        result = client.query(query, parameters={"patient_id": patient_id, "organization_id": organization_id})
+        result = client.query(query, parameters={"organization_id": organization_id})
 
         patient_ids = [row[0] for row in result.result_rows]
         encounter_ids = [row[1] for row in result.result_rows]
@@ -49,7 +50,7 @@ async def patient_organization_contact(patient_id: int, organization_id: int):
 
 # Abfrage 3
 @router.get("/analytics/EncounterTimespan", status_code=200)
-async def encounter_timespan(start: str, end: str):
+async def encounter_timespan(start: datetime.datetime, end: datetime.datetime):
     try:
         client = clickhouse_client()
 

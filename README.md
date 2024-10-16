@@ -50,7 +50,7 @@ git clone https://github.com/jonkuz/FHIRAnalytics
 
 ## Ausführen der API
 Zum Ausführen der API muss nur die main Methode des Python-Programmes ausgeführt werden. ([main.py](main.py))
-Die Logs werden auf der Konsole ausgegeben.
+Die logs werden auf der Konsole ausgegeben.
 
 ## Testen der Funktionalitäten
 - FHIRAnalytics API starten ([main.py](main.py))
