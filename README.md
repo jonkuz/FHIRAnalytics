@@ -1,7 +1,6 @@
 # FHIR Analytics API
-In diesem Projekt ist eine RestAPI implementiert. Diese kann die gleichen Anfragen wie ein HAPI FHIR Server verarbeiten.
-Zudem kann die Schnittstelle PUT-Anfragen von der in der Bachelorarbeit definierten FHIR-Subscription empfangen. 
-Diese Daten werden dann für einen Clickhouse Server aufbereitet und dort abgespeichert. 
+Im Rahmen dieses Projekts wurde eine RestAPI implementiert, die Anfragen verarbeitet, wie sie auch von einem HAPI FHIR Server bearbeitet werden können.
+Darüber hinaus ist die Schnittstelle in der Lage, PUT-Anfragen von der in der Bachelorarbeit definierten FHIR-Subscription zu empfangen und die entsprechenden Daten für einen Clickhouse-Server aufzubereiten und dort abzuspeichern. 
 
 ## Voraussetzungen
 - Python Version 3.11.0 installiert
@@ -27,7 +26,7 @@ git clone https://github.com/jonkuz/FHIRAnalytics
   - Hierbei die Standard Ports und Einstellungen bestehen lassen, dann muss im Skript keine Anpassung vorgenommen werden.
     - Die Einstellungen für die Verbindung können unter [proxy.py](FHIRRequests/proxy.py) angepasst werden.
 - Installation von [Clickhouse Server](https://hub.docker.com/r/clickhouse/clickhouse-server/)
-  - Hier kann der User auf default und das Password leer gelassen werden. Dann funktioniert die im Programm bereits definierte Verbindung.
+  - Sofern die Felder "Default" und "Passwort" leer gelassen werden, funktioniert die im Programm bereits definierte Verbindung.
   - Anpassung der Verbindungseinstellung kann, wenn notwendig, unter [clickhouse_client.py](Clickhouse/clickhouse_client.py) vorgenommen werden.
 - Ausführen der FHIR-Subscription (z.B. mit [Postman](https://www.postman.com/))
 ```
@@ -49,8 +48,8 @@ git clone https://github.com/jonkuz/FHIRAnalytics
 ```
 
 ## Ausführen der API
-Zum Ausführen der API muss nur die main Methode des Python-Programmes ausgeführt werden. ([main.py](main.py))
-Die logs werden auf der Konsole ausgegeben.
+Zum Ausführen der API muss nur die main Methode des Python-Programmes ausgeführt werden ([main.py](main.py)).
+Die Logs werden auf der Konsole ausgegeben.
 
 ## Testen der Funktionalitäten
 - FHIRAnalytics API starten ([main.py](main.py))
@@ -58,7 +57,8 @@ Die logs werden auf der Konsole ausgegeben.
 - HAPI FHIR Server starten (Docker oder CLI)
 
 ### Testen der Funktionalitäten
-Mit dem Testdaten-Generator oder manuell eine Resource vom Typ MedicationStatement oder Encounter erzeugen. Diese kann direkt an die FHIRAnalytics API gesendet werden. Es sind keine direkten Anfragen an den FHIR Server mehr notwendig.
+Erzeugen Sie eine Ressource vom Typ MedicationStatement oder Encounter mit dem Testdaten-Generator oder manuell und senden Sie diese direkt an die FHIRAnalytics API. 
+Auf diese Weise werden direkte Anfragen an den FHIR-Server überflüssig.
 - Überprüfen der Logs in der API
 - Prüfen, ob die Ressource von HAPI FHIR Sever angenommen wurde.
 - Abrufen der Clickhouse Tabelle, ob die Daten übernommen wurden.
