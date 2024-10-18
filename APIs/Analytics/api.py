@@ -52,6 +52,8 @@ async def patient_organization_contact(organization_id: int):
 @router.get("/analytics/EncounterTimespan", status_code=200)
 async def encounter_timespan(start: datetime.datetime, end: datetime.datetime):
     try:
+        if type(start) is not datetime.datetime or type(end) is not datetime.datetime:
+            raise HTTPException(status_code=400, detail=f"start and end must be datetime objects")
         client = clickhouse_client()
 
         query = """
